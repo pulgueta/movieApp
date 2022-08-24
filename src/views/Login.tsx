@@ -12,16 +12,26 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-interface stateProps {
-  email: string;
-  password: string;
-}
+import { useNavigate } from "react-router-dom";
+
+import { firebaseLogin } from "../firebase/utils/settings";
+import { loginProps } from "../interfaces/types";
 
 export const Login: FC = (): JSX.Element => {
-  const [data, setData] = useState<stateProps>({
+  const [data, setData] = useState<loginProps>({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    firebaseLogin(data);
+
+    navigate("/");
+  };
 
   return (
     <Flex
@@ -38,7 +48,7 @@ export const Login: FC = (): JSX.Element => {
       >
         <Stack spacing={4} minW="16rem">
           <Heading textAlign="center">Account login</Heading>
-          <FormControl id="email">
+          <FormControl>
             <FormLabel>Email address</FormLabel>
             <Input
               type="email"
@@ -57,7 +67,12 @@ export const Login: FC = (): JSX.Element => {
             />
           </FormControl>
           <Stack spacing={10}>
-            <Button colorScheme={"messenger"} onClick={() => console.log(data)}>Sign in</Button>
+            <Button
+              colorScheme={"messenger"}
+              onClick={(e: any) => handleLogin(e)}
+            >
+              Sign in
+            </Button>
           </Stack>
         </Stack>
       </Box>
